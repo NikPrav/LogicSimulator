@@ -262,6 +262,7 @@ void readNetlist(string inputFile, vector<gateNode> &gates, vector<signalNode> &
             gates.push_back(gate);
             break;
         case INPUT:
+            // Pushing inputs to inputSignals
             for (int i = 1; i < tokens.size(); i++)
             {
                 if (!tokens[i].compare("-1\\") || !tokens[i].compare("-1\\"))
@@ -273,6 +274,7 @@ void readNetlist(string inputFile, vector<gateNode> &gates, vector<signalNode> &
 
             break;
         case OUTPUT:
+            // Pushing outputs to outputSignals
             for (int i = 1; i < tokens.size(); i++)
             {
                 if (!tokens[i].compare("-1\\") || !tokens[i].compare("-1"))
@@ -283,6 +285,7 @@ void readNetlist(string inputFile, vector<gateNode> &gates, vector<signalNode> &
             }
             break;
         default:
+            // Normal Excecution
             gate.ip1 = stoi(tokens[1]) - 1;
             gate.ip2 = stoi(tokens[2]) - 1;
             gate.op = stoi(tokens[3]) - 1;
@@ -318,6 +321,8 @@ int main(int argc, char *argv[])
     string inputFile = argv[2];
     string outputFile = argv[3];
 
+    cout << "Reading file:" << netlistFile << "\n";
+
     vector<signalNode> signals;
     vector<gateNode> gates;
     vector<string> inputString;
@@ -338,6 +343,7 @@ int main(int argc, char *argv[])
     definedSignals = inputSignals;
 
     // Reading inputs
+    cout << "Reading inputs:" << inputFile << "\n";
     readInputFile(inputFile, inputString);
 
     // iterating through all values of inputs
@@ -351,7 +357,7 @@ int main(int argc, char *argv[])
         // Pushing gate to stack whose inputs are defined
         addToStack(definedSignals, gateStack, gates, evaluatedGates);
 
-        // Evaluating the value of gates in stack
+        // Evaluating the value of gates in stack until it is empty
         while (!gateStack.empty())
         {
             int currentGate = gateStack.back();
@@ -381,8 +387,6 @@ int main(int argc, char *argv[])
 
     //
 
-    cout << "yeah boi";
+    cout << "Saving Output to file:" << outputFile << "\n";
     writeOutputFile(outputFile, outputString);
-    // cout << outputString;
-    // continue until stack empty
 }
